@@ -1,0 +1,49 @@
+#+TITLE: Tail Call
+#+SUBTITLE: Simulated Proper Tail Calls in Emacs
+
+* About
+The Tail Call package provides functions for simulating proper tail
+calls in Emacs. The functions are =tail-call=, which returns an
+unevaluated function application and =tail-call-pull=, which pulls
+results from unevaluated function applications until a value is
+returned that is not an unevaluated function application.
+
+The use of explicit function calls rather than macros provides a
+minimual implementation and the flexability necessary for cases
+involving mutual recursion.
+
+* Examples
+
+#+caption: Example of self-recursion using =tail-call= and =tail-call-pull=
+#+begin_src emacs-lisp
+  (defun fib (n)
+    (labels ((aux (m a b)
+              (if (>= m n) b
+                (tail-call #'aux (1+ m) b (+ a b)))))
+      (tail-call-pull (aux 0 0 1))))
+#+end_src
+
+#+caption: Example of mutual-recursion using =tail-call= and =tail-call-pull=
+#+begin_src emacs-lisp
+  (defun even-p (n)
+    (tail-call-pull (even-p-aux (abs n))))
+
+  (defun odd-p (n)
+    (tail-call-pull (odd-p-aux (abs n))))
+
+  (defun even-p-aux (n)
+    (if (zerop n) t
+      (tail-call #'odd-p-aux (1- n))))
+
+  (defun odd-p-aux (n)
+    (if (zerop n) nil
+      (tail-call #'even-p-aux (1- n))))
+#+end_src
+
+* Similar Projects
+Similar functionality is available from other projects:
+- [[https://github.com/ROCKTAKEY/recur][recur]]
+- [[https://github.com/Wilfred/tco.el/blob/master/tco.el][tco]]
+
+Both of these project provide macros, rather than relying on explicit
+function calls. This may be preferable depending on the use case.
