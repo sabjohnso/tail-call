@@ -4,6 +4,7 @@
 
 ;; Author: Samuel B. Johnson <sabjohnso.dev@gmain.com>
 ;; Version: 0.1.0
+;; URL: https://github.com/sabjohnso/tail-call
 
 ;;; Commetary
 
@@ -45,11 +46,10 @@
 ;;
 ;;  - tail-call : https://github.com/ROCKTAKEY/recur
 ;;  - tco   : https://github.com/Wilfred/tco.el/blob/master/tco.el
- 
+
 ;;; Code:
 
 (require 'eieio)
-
 
 (defclass tail-call-data ()
   ((func :initarg :func)
@@ -61,12 +61,12 @@
   (when (not (tail-call-evaluated tc))
     (setf (tail-call-result tc)
           (with-slots (func args) tc
-            (apply #'funcall func args)))    
+            (apply #'funcall func args)))
     (setf (tail-call-evaluated tc) t))
   (tail-call-result tc))
 
 (defun tail-call-pull (arg)
-  "Pull a value from unevaluated function application"
+  "Pull a value from unevaluated function applications"
   (while (tail-call-data-p arg)
     (setf arg (tail-call-get-result arg)))
   arg)
@@ -79,5 +79,3 @@
 
 (provide 'tail-call)
 ;;; tail.el ends here
-
-
