@@ -5,7 +5,7 @@ srcdir = $(shell pwd)
 TARGETS = tail-call.elc
 
 LOCAL_PATHS = -L $PWD -L $PWD/tests
-COMPILE_FLAGS = -f batch-byte+native-compile
+COMPILE_FLAGS = -f batch-byte-compile
 TEST_FLAGS = -f ert-run-tests-batch-and-exit
 
 
